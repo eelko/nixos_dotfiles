@@ -1,0 +1,9 @@
+[submodule "config/qtile"]
+	path = config/qtile
+	url = https://github.com/tonybanters/qtile
+[submodule "config/rofi"]
+	path = config/rofi
+	url = https://github.com/tonybanters/rofi
+[submodule "config/nvim"]
+	path = config/nvim
+	url = https://github.com/eelko/nvim_config
