@@ -74,7 +74,6 @@
     git
     bat
     alacritty	
-    neofetch
   ];
 
   fonts.packages = with pkgs; [

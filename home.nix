@@ -19,7 +19,7 @@ in
   home.username = "eelko";
   home.homeDirectory = "/home/eelko";
   programs.git.enable = true;
-  home.stateVersion = "25.05";
+  home.stateVersion = "25.05"; # dont change this for update, compatibility thing
 
   programs.bash = {
     enable = true;
@@ -27,6 +27,7 @@ in
       btw = "echo I use nixos, btw";
       lg = "lazygit";
       nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
+      update = "sudo nix flake update && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       l = "eza -l --git-repos --git";
     };
     initExtra = ''
@@ -64,15 +65,18 @@ in
 
 # Programs I want installed by home manager 
  home.packages = with pkgs; [
-  eza
-	lazygit
-	neovim
-	ripgrep
-	nil
-	nixpkgs-fmt
-	nodejs
-	gcc
-  rofi
+    eza
+    lazygit
+    neovim
+    ripgrep
+    clang-tools
+    lua-language-server
+    tree-sitter
+    nil
+    nixpkgs-fmt
+    nodejs
+    gcc
+    rofi
  ];
 }
 
