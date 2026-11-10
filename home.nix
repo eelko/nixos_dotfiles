@@ -13,18 +13,28 @@ let
     qtile = "qtile";
     nvim = "nvim";
     rovi = "rovi";
+    tmux = "tmux";
   };
 in
 {
   home.username = "eelko";
   home.homeDirectory = "/home/eelko";
-  programs.git.enable = true;
   home.stateVersion = "25.05"; # dont change this for update, compatibility thing
+
+  programs.git = {
+    enable = true;
+    settings = {
+      user = {
+        name = "eelko";
+        email = "6917935+eelko@users.noreply.github.com";
+      };
+    };
+  };
 
   programs.bash = {
     enable = true;
     shellAliases = {
-      btw = "echo I use nixos, btw";
+      btw = "Eelko's home manager nix setup";
       lg = "lazygit";
       nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       update = "sudo nix flake update && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
@@ -70,9 +80,11 @@ in
     lazygit               # terminal UI for git
     neovim                # text editor
     ripgrep               # fast grep, used by Telescope live grep
-    nodejs                # JavaScript runtime, needed by Copilot
-    rofi                  # application launcher for qtile
-    gcc                   # C compiler, used to build treesitter parsers
+    bat                   # nice cat
+    tmux                  # terminal multiplexer
+
+    # Programming
+    gcc                   # C compiler, also used to build treesitter parsers
     tree-sitter           # CLI that nvim-treesitter uses to compile parsers
     clang-tools           # clangd language server and clang-format formatter for C and C++
     lua-language-server   # Lua language server (lua_ls), also formats Lua
@@ -85,10 +97,12 @@ in
     bash-language-server  # Bash language server (bashls)
     shellcheck            # shell script linter, used by bashls for diagnostics
     shfmt                 # shell script formatter
+    # nodejs                # JavaScript runtime
     # rustc                 # Rust compiler
     # cargo                 # Rust build tool and package manager
     # rust-analyzer         # Rust language server
     # rustfmt               # Rust formatter
+
   ];
 }
 

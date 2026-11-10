@@ -63,17 +63,17 @@
     };
   };
 
-
+  # Basic browser
   programs.firefox.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-    bat
-    alacritty
+    rofi                  # application launcher for qtile
+    vim                   # basic editor
+    wget                  # download stuff from the internet
+    git                   # essential version management
+    alacritty             # basic terminal emulator
   ];
 
   fonts.packages = with pkgs; [
