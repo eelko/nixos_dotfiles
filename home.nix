@@ -58,6 +58,8 @@ in
       lg = "lazygit";
       nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       update = "sudo nix flake update && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
+      nclean = "sudo nix-collect-garbage";
+      claude = "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p claude-code --run claude";
       l = "eza -l --git-repos --git";
     };
   };
