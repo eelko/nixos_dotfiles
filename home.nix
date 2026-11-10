@@ -59,7 +59,6 @@ in
       nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       update = "sudo nix flake update && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       nclean = "sudo nix-collect-garbage";
-      claude = "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p claude-code --run claude";
       l = "eza -l --git-repos --git";
     };
   };
@@ -117,6 +116,7 @@ in
     ripgrep               # fast grep, used by Telescope live grep
     bat                   # nice cat
     tmux                  # terminal multiplexer
+    claude-code           # Claude Code CLI
 
     # Programming
     gcc                   # C compiler, also used to build treesitter parsers
