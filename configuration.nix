@@ -38,7 +38,7 @@
     autoRepeatInterval = 35;
     windowManager.qtile.enable = true;
     displayManager.sessionCommands = ''
-      ${pkgs.xorg.xrandr}/bin/xrandr --output Virtual-1 --mode 1920x1200
+      ${pkgs.xrandr}/bin/xrandr --output Virtual-1 --mode 1920x1200
     '';
   };
   services.displayManager.ly.enable = true;
@@ -63,8 +63,9 @@
     };
   };
 
-  # Basic browser
+  # Basics
   programs.firefox.enable = true;
+  programs.fish.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
