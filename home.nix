@@ -12,7 +12,7 @@ let
   configs = {
     qtile = "qtile";
     nvim = "nvim";
-    rovi = "rovi";
+    rofi = "rofi";
     tmux = "tmux";
   };
 in
