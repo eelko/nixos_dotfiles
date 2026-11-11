@@ -11,6 +11,17 @@
       nixos-hardware.nixosModules.apple-t2
     ];
 
+  hardware.firmware = [
+    (pkgs.stdenvNoCC.mkDerivation (final: {
+      name = "brcm-firmware";
+      src = /etc/nixos/firmware/brcm;
+      installPhase = ''
+        mkdir -p $out/lib/firmware/brcm
+        cp ${final.src}/* "$out/lib/firmware/brcm"
+      '';
+    }))
+  ];
+
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
     efi.efiSysMountPoint = "/boot"; # make sure to change this to your EFI partition!
