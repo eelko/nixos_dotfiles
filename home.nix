@@ -1,14 +1,14 @@
-{ config, pkgs, pkgs-new, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 
 let
-  # dotfiles is a varable pointing to the config directory used for external configs for apps
+  # dotfiles is a variable pointing to the config directory used for external configs for apps
   # managed by this home manager file
   dotfiles = "${config.home.homeDirectory}/nixos-dotfiles/config";
-  # create_sysmlink is a function that creates a symlink for a given path. Is used by the dotfiles structure
+  # create_symlink is a function that creates a symlink for a given path. Is used by the dotfiles structure
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
-  # Configs is a map that maps a config to a directory name in the dotfiles directory. 
-  # adding a config is as simple as adding the real config to the ${dotfiles} deirectory
-  # and adding the map in the config defenition
+  # configs is a map that maps a config to a directory name in the dotfiles directory.
+  # adding a config is as simple as adding the real config to the ${dotfiles} directory
+  # and adding the map in the config definition
   configs = {
     qtile = "qtile";
     nvim = "nvim";
@@ -46,7 +46,7 @@ in
       btw = "Eelko's home manager nix setup with bash";
       lg = "lazygit";
       nrs = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
-      update = "nix flake update nixpkgs-new nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
+      update = "nix flake update nixpkgs nixpkgs-unstable nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
       l = "eza -l --git-repos --git";
     };
   };
@@ -57,27 +57,27 @@ in
       btw = "echo I use nixos with fish";
       lg = "lazygit";
       nrs = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
-      update = "nix flake update nixpkgs-new nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
+      update = "nix flake update nixpkgs nixpkgs-unstable nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
       nclean = "sudo nix-collect-garbage";
       claude = "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p claude-code --run claude";
       l = "eza -l --git-repos --git";
     };
   };
-    programs.fish.functions.fish_prompt = ''
-      set -l branch (git branch --show-current 2>/dev/null)
+  programs.fish.functions.fish_prompt = ''
+    set -l branch (git branch --show-current 2>/dev/null)
 
-      set_color 00d700; echo -n $USER
-      set_color normal; echo -n ' in '
-      set_color 0087ff; echo -n (string replace -r "^$HOME" '~' -- $PWD)
+    set_color 00d700; echo -n $USER
+    set_color normal; echo -n ' in '
+    set_color 0087ff; echo -n (string replace -r "^$HOME" '~' -- $PWD)
+    set_color normal
+
+    if test -n "$branch"
+      set_color ff5fff; echo -n " ($branch)"
       set_color normal
+    end
 
-      if test -n "$branch"
-        set_color ff5fff; echo -n " ($branch)"
-        set_color normal
-      end
-
-      echo -n ' $ '
-    '';
+    echo -n ' $ '
+  '';
 
 
   programs.nix-your-shell = {
@@ -108,36 +108,36 @@ in
   #  recursive = true;
   # };
 
-  # Programs I want installed by home manager 
-  home.packages = with pkgs; [
-    # General tools
-    eza                   # modern ls replacement (used by the l alias)
-    lazygit               # terminal UI for git
-    neovim                # text editor
-    ripgrep               # fast grep, used by Telescope live grep
-    bat                   # nice cat
-    tmux                  # terminal multiplexer
-
-    # Programming
-    gcc                   # C compiler, also used to build treesitter parsers
-    tree-sitter           # CLI that nvim-treesitter uses to compile parsers
-    clang-tools           # clangd language server and clang-format formatter for C and C++
-    lua-language-server   # Lua language server (lua_ls), also formats Lua
-    nil                   # Nix language server
-    nixpkgs-fmt           # Nix formatter
-    taplo                 # TOML language server and formatter
-    yaml-language-server  # YAML language server (yamlls), also formats YAML
-    pyright               # Python language server: types, completion, navigation
-    ruff                  # Python linter and formatter (also runs as a language server)
-    bash-language-server  # Bash language server (bashls)
-    shellcheck            # shell script linter, used by bashls for diagnostics
-    shfmt                 # shell script formatter
-    # nodejs                # JavaScript runtime
-    # rustc                 # Rust compiler
-    # cargo                 # Rust build tool and package manager
-    # rust-analyzer         # Rust language server
-    # rustfmt               # Rust formatter
-
-  ];
+  home.packages =
+    # General tools — 26.05, stable ABI
+    (with pkgs; [
+      eza                   # modern ls replacement (used by the l alias)
+      lazygit               # terminal UI for git
+      ripgrep               # fast grep, used by Telescope live grep
+      bat                   # nice cat
+      tmux                  # terminal multiplexer
+      gcc                   # C compiler, also used to build treesitter parsers
+    ])
+    ++
+    # Dev tools — unstable, latest versions
+    (with pkgs-unstable; [
+      neovim                # text editor — latest release
+      tree-sitter           # CLI that nvim-treesitter uses to compile parsers
+      clang-tools           # clangd language server and clang-format for C/C++
+      lua-language-server   # Lua language server (lua_ls), also formats Lua
+      nil                   # Nix language server
+      nixpkgs-fmt           # Nix formatter
+      taplo                 # TOML language server and formatter
+      yaml-language-server  # YAML language server (yamlls), also formats YAML
+      pyright               # Python language server: types, completion, navigation
+      ruff                  # Python linter and formatter (also runs as a language server)
+      bash-language-server  # Bash language server (bashls)
+      shellcheck            # shell script linter, used by bashls for diagnostics
+      shfmt                 # shell script formatter
+      # nodejs              # JavaScript runtime
+      # rustc               # Rust compiler
+      # cargo               # Rust build tool and package manager
+      # rust-analyzer       # Rust language server
+      # rustfmt             # Rust formatter
+    ]);
 }
-
