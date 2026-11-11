@@ -117,7 +117,13 @@ in
       bat                   # nice cat
       tmux                  # terminal multiplexer
       gcc                   # C compiler, also used to build treesitter parsers
-      tidal-hifi            # Tidal music streaming (Hi-Fi/Widevine via Electron)
+      # Tidal music streaming (Hi-Fi/Widevine via Electron). --disable-dev-shm-usage
+      # works around a /dev/shm shared-memory crash (ESRCH) on this machine.
+      (tidal-hifi.overrideAttrs (old: {
+        postFixup = (old.postFixup or "") + ''
+          wrapProgram $out/bin/tidal-hifi --add-flags --disable-dev-shm-usage
+        '';
+      }))
     ])
     ++
     # Dev tools — unstable, latest versions

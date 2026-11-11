@@ -34,6 +34,24 @@
   # Swap the Cmd and Option/Alt keys on the internal Apple keyboard.
   boot.kernelParams = [ "hid_apple.swap_opt_cmd=1" ];
 
+  # T2 suspend workaround (t2linux wiki): the T2 resets its USB devices on
+  # wake, which leaves the Touch Bar dead. Unload apple-bce before sleep and
+  # reload it after resume. Wi-Fi (brcmfmac) is deliberately left alone: it
+  # survives suspend by itself, and reloading it right after resume fails
+  # with "Unable to change power state from D3cold to D0".
+  systemd.services.t2-suspend-fix = {
+    description = "Unload/reload apple-bce around suspend (T2 Touch Bar fix)";
+    before = [ "sleep.target" ];
+    wantedBy = [ "sleep.target" ];
+    unitConfig.StopWhenUnneeded = true;
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.kmod}/bin/rmmod -f apple-bce";
+      ExecStop = "${pkgs.kmod}/bin/modprobe apple-bce";
+    };
+  };
+
   # A one-off GDM login as root left a stale AccountsService cache file
   # marking it as a regular (visible) user. Force it back to hidden on
   # every activation so it doesn't keep showing up in the GDM user list.
