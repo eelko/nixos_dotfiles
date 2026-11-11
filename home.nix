@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-new, ... }:
 
 let
   # dotfiles is a varable pointing to the config directory used for external configs for apps
@@ -45,8 +45,8 @@ in
     shellAliases = {
       btw = "Eelko's home manager nix setup with bash";
       lg = "lazygit";
-      nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
-      update = "sudo nix flake update && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
+      nrs = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
+      update = "nix flake update nixpkgs-new nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
       l = "eza -l --git-repos --git";
     };
   };
@@ -56,8 +56,8 @@ in
     shellAliases = {
       btw = "echo I use nixos with fish";
       lg = "lazygit";
-      nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
-      update = "sudo nix flake update && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
+      nrs = "sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
+      update = "nix flake update nixpkgs-new nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
       nclean = "sudo nix-collect-garbage";
       claude = "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p claude-code --run claude";
       l = "eza -l --git-repos --git";

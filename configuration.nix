@@ -2,13 +2,13 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, pkgs-new, nixos-hardware, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-      "${builtins.fetchGit { url = "https://github.com/NixOS/nixos-hardware.git"; }}/apple/t2"
+      nixos-hardware.nixosModules.apple-t2
     ];
 
   # Use the systemd-boot EFI boot loader.
