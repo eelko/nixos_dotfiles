@@ -10,7 +10,6 @@ let
   # adding a config is as simple as adding the real config to the ${dotfiles} deirectory
   # and adding the map in the config defenition
   configs = {
-    qtile = "qtile";
     nvim = "nvim";
     rofi = "rofi";
     tmux = "tmux";

@@ -29,16 +29,6 @@
   # Set your time zone.
   time.timeZone = "Europe/Amsterdam";
 
-  # Enable the X11 windowing system.
-  services.xserver = {
-    enable = true;
-    autoRepeatDelay = 200;
-    autoRepeatInterval = 35;
-    windowManager.qtile.enable = true;
-    displayManager.sessionCommands = ''
-      ${pkgs.xrandr}/bin/xrandr --output Virtual-1 --mode 1920x1200
-    '';
-  };
   services.displayManager.ly.enable = true;
 
   environment.sessionVariables = {
@@ -52,7 +42,7 @@
     XCURSOR_SIZE = "24";
   };
 
-  # Sway (Wayland) — added as a second, selectable session alongside qtile/X11
+  # Sway (Wayland window manager)
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
@@ -93,7 +83,7 @@
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    rofi                  # application launcher, works under both X11 (qtile) and Wayland (sway)
+    rofi                  # application launcher for sway
     vim                   # basic editor
     wget                  # download stuff from the internet
     git                   # essential version management
