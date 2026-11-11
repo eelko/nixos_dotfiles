@@ -117,6 +117,7 @@ in
       bat                   # nice cat
       tmux                  # terminal multiplexer
       gcc                   # C compiler, also used to build treesitter parsers
+      tidal-hifi            # Tidal music streaming (Hi-Fi/Widevine via Electron)
     ])
     ++
     # Dev tools — unstable, latest versions
