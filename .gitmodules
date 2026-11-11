@@ -7,3 +7,6 @@
 [submodule "config/sway"]
 	path = config/sway
 	url = git@github.com:eelko/sway.git
+[submodule "config/qtile"]
+	path = config/qtile
+	url = https://github.com/tonybanters/qtile

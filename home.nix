@@ -1,20 +1,15 @@
+# Shared across every profile (sway / qtile / shell): shell setup, git,
+# general + programming tools, and the nvim/tmux dotfiles that have nothing
+# to do with which window manager (if any) is in use.
+
 { config, pkgs, ... }:
 
 let
-  # dotfiles is a varable pointing to the config directory used for external configs for apps
-  # managed by this home manager file
   dotfiles = "${config.home.homeDirectory}/nixos-dotfiles/config";
-  # create_sysmlink is a function that creates a symlink for a given path. Is used by the dotfiles structure
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
-  # Configs is a map that maps a config to a directory name in the dotfiles directory. 
-  # adding a config is as simple as adding the real config to the ${dotfiles} deirectory
-  # and adding the map in the config defenition
   configs = {
     nvim = "nvim";
-    rofi = "rofi";
     tmux = "tmux";
-    sway = "sway";
-    waybar = "waybar";
   };
 in
 {
@@ -47,6 +42,8 @@ in
       btw = "Eelko's home manager nix setup with bash";
       lg = "lazygit";
       nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
+      nrs-sway = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw-sway";
+      nrs-qtile = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw-qtile";
       update = "sudo nix flake update && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       l = "eza -l --git-repos --git";
     };
@@ -58,6 +55,8 @@ in
       btw = "echo I use nixos with fish";
       lg = "lazygit";
       nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
+      nrs-sway = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw-sway";
+      nrs-qtile = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw-qtile";
       update = "sudo nix flake update && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       nclean = "sudo nix-collect-garbage";
       l = "eza -l --git-repos --git";
@@ -88,13 +87,6 @@ in
   programs.fzf.enable = true;           # fuzzy Ctrl-R history, Ctrl-T file picker
   programs.carapace.enable = true;      # rich completions for many CLIs
 
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      window.opacity = 0.9;
-    };
-  };
-
   xdg.configFile = builtins.mapAttrs
     (name: subpath: {
       source = create_symlink "${dotfiles}/${subpath}";
@@ -102,13 +94,7 @@ in
     })
     configs;
 
-  # The above is a for loop running through configs and making statements like below
-  # xdg.configFile."nvim" = {
-  #  source = create_symlink "${dotfiles}/nvim";
-  #  recursive = true;
-  # };
-
-  # Programs I want installed by home manager 
+  # Programs I want installed by home manager
   home.packages = with pkgs; [
     # General tools
     eza                   # modern ls replacement (used by the l alias)
@@ -141,4 +127,3 @@ in
 
   ];
 }
-

@@ -1,6 +1,9 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
+# Shared across every profile (sway / qtile / shell). Boot, hardware,
+# networking, users, and anything else that doesn't depend on which
+# window manager (if any) is in use. Also doubles as the full config for
+# the plain-shell profile (plain console/getty login, no display manager)
+# — the sway/qtile profiles layer desktops/sway-desktop.nix /
+# desktops/qtile-desktop.nix (which enable ly) on top of this.
 
 { config, lib, pkgs, ... }:
 
@@ -20,7 +23,6 @@
   # boot.loader.grub.device = "nodev"; # "/dev/vda" or "nodev" for efi only
   services.qemuGuest.enable = true;
 
-
   networking.hostName = "nixos-btw"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui.
@@ -28,33 +30,6 @@
 
   # Set your time zone.
   time.timeZone = "Europe/Amsterdam";
-
-  services.displayManager.ly.enable = true;
-
-  environment.sessionVariables = {
-    # virtio-gpu's hardware cursor plane renders garbled/offset under wlroots
-    # in this VM — composite the cursor in software instead.
-    WLR_NO_HARDWARE_CURSORS = "1";
-    # Xwayland apps (e.g. Firefox) otherwise fall back to their own default
-    # cursor theme/size, producing a visible second pointer alongside the
-    # native Wayland one — pin both to the same theme.
-    XCURSOR_THEME = "Adwaita";
-    XCURSOR_SIZE = "24";
-  };
-
-  # Sway (Wayland window manager)
-  programs.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true;
-    extraPackages = with pkgs; [
-      waybar
-      swaybg
-      swaylock
-      grim
-      slurp
-      wl-clipboard
-    ];
-  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.eelko = {
@@ -83,16 +58,9 @@
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    rofi                  # application launcher for sway
     vim                   # basic editor
     wget                  # download stuff from the internet
     git                   # essential version management
-    alacritty             # basic terminal emulator
-    adwaita-icon-theme    # provides the Adwaita cursor theme (see sessionVariables below)
-  ];
-
-  fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "claude-code" ];
@@ -100,4 +68,3 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "25.05"; #Don't change this number
 }
-
