@@ -28,6 +28,9 @@
     systemd-boot.enable = true;
   };
 
+  # Swap the Cmd and Option/Alt keys on the internal Apple keyboard.
+  boot.kernelParams = [ "hid_apple.swap_opt_cmd=1" ];
+
   networking.hostName = "nixbox"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui.
