@@ -41,6 +41,31 @@
   };
   services.displayManager.ly.enable = true;
 
+  environment.sessionVariables = {
+    # virtio-gpu's hardware cursor plane renders garbled/offset under wlroots
+    # in this VM — composite the cursor in software instead.
+    WLR_NO_HARDWARE_CURSORS = "1";
+    # Xwayland apps (e.g. Firefox) otherwise fall back to their own default
+    # cursor theme/size, producing a visible second pointer alongside the
+    # native Wayland one — pin both to the same theme.
+    XCURSOR_THEME = "Adwaita";
+    XCURSOR_SIZE = "24";
+  };
+
+  # Sway (Wayland) — added as a second, selectable session alongside qtile/X11
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+    extraPackages = with pkgs; [
+      waybar
+      swaybg
+      swaylock
+      grim
+      slurp
+      wl-clipboard
+    ];
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.eelko = {
     isNormalUser = true;
@@ -68,11 +93,12 @@
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    rofi                  # application launcher for qtile
+    rofi                  # application launcher, works under both X11 (qtile) and Wayland (sway)
     vim                   # basic editor
     wget                  # download stuff from the internet
     git                   # essential version management
     alacritty             # basic terminal emulator
+    adwaita-icon-theme    # provides the Adwaita cursor theme (see sessionVariables below)
   ];
 
   fonts.packages = with pkgs; [

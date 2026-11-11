@@ -14,6 +14,8 @@ let
     nvim = "nvim";
     rofi = "rofi";
     tmux = "tmux";
+    sway = "sway";
+    waybar = "waybar";
   };
 in
 {
