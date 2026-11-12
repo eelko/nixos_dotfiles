@@ -3,8 +3,11 @@
 
   inputs = {
     # Kernel-locked nixpkgs — T2 patches compile against this exact tree.
-    # Update ONLY after testing in a VM: nix flake update nixpkgs-kernel
+    # Update ONLY after testing first: nix flake update nixpkgs-kernel
     nixpkgs-kernel.url = "github:NixOS/nixpkgs/b6018f87da91d19d0ab4cf979885689b469cdd41";
+    # Also pinned in flake.lock — update with: nix flake update nixos-hardware
+    # This is the T2 patch code that will be applied to the kernel. 
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # System base: 26.05 for services, desktop, and general packages.
     # Safe to update: nix flake update nixpkgs
@@ -13,9 +16,6 @@
     # Unstable channel for bleeding-edge dev tools (neovim, LSPs, language tools).
     # Safe to update: nix flake update nixpkgs-unstable
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
-
-    # Pinned in flake.lock — update with: nix flake update nixos-hardware
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
