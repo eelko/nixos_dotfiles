@@ -12,8 +12,9 @@ let
   configs = {
     qtile = "qtile";
     nvim = "nvim";
-    rovi = "rovi";
+    rofi = "rofi";
     tmux = "tmux";
+    alacritty = "alacritty";
   };
 in
 {
@@ -59,7 +60,6 @@ in
       nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       update = "nix flake update nixpkgs nixpkgs-unstable nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
       nclean = "sudo nix-collect-garbage";
-      # claude = "NIXPKGS_ALLOW_UNFREE=1 nix-shell -p claude-code --run claude";
       l = "eza -l --git-repos --git";
     };
   };
@@ -88,19 +88,29 @@ in
   programs.fzf.enable = true;           # fuzzy Ctrl-R history, Ctrl-T file picker
   programs.carapace.enable = true;      # rich completions for many CLIs
 
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      window.opacity = 0.9;
-    };
-  };
-
   xdg.configFile = builtins.mapAttrs
     (name: subpath: {
       source = create_symlink "${dotfiles}/${subpath}";
       recursive = true;
     })
     configs;
+
+  # Check out any git submodules under ${dotfiles} that aren't initialized yet
+  # (e.g. after a fresh clone without --recurse-submodules). Only touches
+  # uninitialized submodules, so branches/local edits in existing ones are left alone.
+  home.activation.initDotfilesSubmodules = config.lib.dag.entryBefore [ "linkGeneration" ] ''
+    repo="${config.home.homeDirectory}/nixos-dotfiles"
+    git="${pkgs.git}/bin/git"
+    if $git -C "$repo" rev-parse --git-dir >/dev/null 2>&1; then
+      missing=$($git -C "$repo" submodule status | ${pkgs.gawk}/bin/awk '/^-/ {print $2}')
+      if [ -n "$missing" ]; then
+        verboseEcho "Initializing dotfiles submodules: $missing"
+        if ! run env PATH="${pkgs.openssh}/bin:$PATH" $git -C "$repo" submodule update --init --recursive -- $missing; then
+          warnEcho "Could not initialize dotfiles submodules ($missing); run 'git submodule update --init' in $repo"
+        fi
+      fi
+    fi
+  '';
 
   # The above is a for loop running through configs and making statements like below
   # xdg.configFile."nvim" = {
@@ -111,6 +121,7 @@ in
   home.packages =
     # General tools — 26.05, stable ABI
     (with pkgs; [
+      alacritty             # default console preference 
       eza                   # modern ls replacement (used by the l alias)
       lazygit               # terminal UI for git
       ripgrep               # fast grep, used by Telescope live grep
