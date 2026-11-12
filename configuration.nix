@@ -45,7 +45,26 @@
       Type = "oneshot";
       RemainAfterExit = true;
       ExecStart = "${pkgs.kmod}/bin/rmmod -f apple-bce";
-      ExecStop = "${pkgs.kmod}/bin/modprobe apple-bce";
+      ExecStop = [
+        "${pkgs.kmod}/bin/modprobe apple-bce"
+        # The Touch Bar disappears with apple-bce; restart tiny-dfr so it
+        # re-attaches to it. "-" = don't fail the unit if this fails.
+        "-${pkgs.systemd}/bin/systemctl restart tiny-dfr.service"
+      ];
+    };
+  };
+
+  # Customizable Touch Bar via tiny-dfr (draws the bar through appletbdrm).
+  # Settings are merged over the package defaults, see
+  # ${pkgs.tiny-dfr}/share/tiny-dfr/config.toml for all keys and examples.
+  # Buttons can only send key codes; to run a command, send e.g. F13
+  # and bind that key in qtile.
+  hardware.apple.touchBar = {
+    enable = true;
+    settings = {
+      MediaLayerDefault = true;   # media keys by default, hold Fn for F1–F12
+      EnablePixelShift = true;    # slowly shift contents to spare the OLED
+      ShowButtonOutlines = false;
     };
   };
 
