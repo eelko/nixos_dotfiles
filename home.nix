@@ -39,7 +39,7 @@ in
       export PS1='\[\e[38;5;40m\]\u\[\e[0m\] in \[\e[38;5;33m\]\w\[\e[0m\] \[\e[38;5;207m\]($(git branch --show-current 2>/dev/null))\[\e[0m\] $ '
     '';
     shellAliases = {
-      btw = "Eelko's home manager nix setup with bash";
+      btw = "echo bash interpreter on nix";
       lg = "lazygit";
       nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       update = "nix flake update nixpkgs nixpkgs-unstable nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
@@ -50,7 +50,7 @@ in
   programs.fish = {
     enable = true;
     shellAliases = {
-      btw = "echo I use nixos with fish";
+      btw = "echo fish interpreter on nix";
       lg = "lazygit";
       nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
       update = "nix flake update nixpkgs nixpkgs-unstable nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
@@ -122,6 +122,20 @@ in
       ripgrep               # fast grep, used by Telescope live grep
       bat                   # nice cat
       tmux                  # terminal multiplexer
+      # Alacritty's startup program (config/alacritty/alacritty.toml):
+      # re-attach to a detached tmux session if there is one, else start a new one.
+      (writeShellScriptBin "tmux-attach-or-new" ''
+        # Launched from inside tmux (e.g. `alacritty` typed in a pane)? Don't refuse as nested.
+        unset TMUX
+        # First session with no clients; "<attached>:<name>" so names may contain spaces.
+        session=$(tmux list-sessions -F '#{session_attached}:#{session_name}' 2>/dev/null \
+          | ${gawk}/bin/awk -F: '$1 == 0 { sub(/^[^:]*:/, ""); print; exit }')
+        if [ -n "$session" ]; then
+          exec tmux attach-session -t "$session"
+        else
+          exec tmux new-session
+        fi
+      '')
       gcc                   # C compiler, also used to build treesitter parsers
       # Tidal music streaming (Hi-Fi/Widevine via Electron). --disable-dev-shm-usage
       # works around a /dev/shm shared-memory crash (ESRCH) on this machine.
