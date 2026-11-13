@@ -122,6 +122,7 @@ in
       ripgrep               # fast grep, used by Telescope live grep
       bat                   # nice cat
       tmux                  # terminal multiplexer
+      keepassxc             # password manager
       # Alacritty's startup program (config/alacritty/alacritty.toml):
       # re-attach to a detached tmux session if there is one, else start a new one.
       (writeShellScriptBin "tmux-attach-or-new" ''
