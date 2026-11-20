@@ -3,7 +3,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
+      ./hardware-configuration.nix
       nixos-hardware.nixosModules.apple-t2
     ];
 
@@ -49,9 +49,16 @@
         "${pkgs.kmod}/bin/modprobe apple-bce"
         # The Touch Bar disappears with apple-bce; restart tiny-dfr so it
         # re-attaches to it. "-" = don't fail the unit if this fails.
-        "-${pkgs.systemd}/bin/systemctl restart tiny-dfr.service"
+        # "-${pkgs.systemd}/bin/systemctl restart tiny-dfr.service"
       ];
     };
+  };
+
+  # Closing the lid does nothing (no suspend), on battery, on AC and docked.
+  services.logind.settings.Login = {
+    HandleLidSwitch = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
+    HandleLidSwitchDocked = "ignore";
   };
 
   # Customizable Touch Bar via tiny-dfr (draws the bar through appletbdrm).
@@ -108,7 +115,15 @@
 
   programs.fish.enable = true;
 
-  programs.firefox.enable = true;
+  programs.nh = {
+    enable = true;
+    clean = {
+      enable = true;
+      extraArgs = "--keep-since 14d --keep 5";
+    };
+  };
+
+  # programs.firefox.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).

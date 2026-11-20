@@ -51,7 +51,7 @@
               })
             ];
           }
-          ./configuration.nix
+          ./hosts/macbookpro16_2/configuration.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {

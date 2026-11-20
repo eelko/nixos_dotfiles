@@ -123,6 +123,7 @@ in
       bat                   # nice cat
       tmux                  # terminal multiplexer
       keepassxc             # password manager
+      firefox               # favourite browser
       # Alacritty's startup program (config/alacritty/alacritty.toml):
       # re-attach to a detached tmux session if there is one, else start a new one.
       (writeShellScriptBin "tmux-attach-or-new" ''
