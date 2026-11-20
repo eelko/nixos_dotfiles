@@ -1,10 +1,10 @@
-{ config, lib, pkgs, pkgs-unstable, nixos-hardware, ... }:
+{ config, lib, pkgs, pkgs-unstable, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      nixos-hardware.nixosModules.apple-t2
+      ./t2.nix
     ];
 
   # Allow unfree packages (e.g. tidal-hifi's bundled castlabs/Widevine Electron build).

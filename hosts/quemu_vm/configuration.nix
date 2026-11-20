@@ -20,6 +20,9 @@
   # boot.loader.grub.device = "nodev"; # "/dev/vda" or "nodev" for efi only
   services.qemuGuest.enable = true;
 
+  # home.nix (shared) installs unfree packages such as tidal-hifi.
+  nixpkgs.config.allowUnfree = true;
+
 
   networking.hostName = "nixos-btw"; # Define your hostname.
 

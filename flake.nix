@@ -4,9 +4,10 @@
   inputs = {
     # Kernel-locked nixpkgs — T2 patches compile against this exact tree.
     # Update ONLY after testing first: nix flake update nixpkgs-kernel
+    # Used only by hosts/macbookpro16_2/t2.nix.
     nixpkgs-kernel.url = "github:NixOS/nixpkgs/b6018f87da91d19d0ab4cf979885689b469cdd41";
     # Also pinned in flake.lock — update with: nix flake update nixos-hardware
-    # This is the T2 patch code that will be applied to the kernel. 
+    # This is the T2 patch code that will be applied to the kernel.
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # System base: 26.05 for services, desktop, and general packages.
@@ -23,35 +24,23 @@
     };
   };
 
-  outputs = { self, nixpkgs-kernel, nixpkgs, nixpkgs-unstable, nixos-hardware, home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
       system = "x86_64-linux";
-
-      pkgs-kernel = import nixpkgs-kernel {
-        inherit system;
-        config.allowUnfree = true;
-      };
 
       pkgs-unstable = import nixpkgs-unstable {
         inherit system;
         config.allowUnfree = true;
       };
-    in
-    {
-      nixosConfigurations.nixos-btw = nixpkgs.lib.nixosSystem {
+
+      # Generic host builder: everything host-specific lives in hosts/<hostDir>/.
+      # Modules get `inputs` via specialArgs, so a host can pull in any flake
+      # input it needs (e.g. nixos-hardware, nixpkgs-kernel) on its own.
+      mkHost = hostDir: nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit pkgs-unstable nixos-hardware; };
+        specialArgs = { inherit inputs pkgs-unstable; };
         modules = [
-          # Injects the pinned linux_6_18 from 25.11 into the 26.05 pkgs
-          # so the T2 patches still apply cleanly.
-          {
-            nixpkgs.overlays = [
-              (final: prev: {
-                linux_6_18 = pkgs-kernel.linux_6_18;
-              })
-            ];
-          }
-          ./hosts/macbookpro16_2/configuration.nix
+          ./hosts/${hostDir}/configuration.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -63,6 +52,14 @@
             };
           }
         ];
+      };
+    in
+    {
+      nixosConfigurations = {
+        # MacBook Pro 16,2 (T2). Name kept as nixos-btw for the nrs/update aliases.
+        nixos-btw = mkHost "macbookpro16_2";
+        # QEMU VM (needs --impure: imports /etc/nixos/hardware-configuration.nix).
+        quemu_vm = mkHost "quemu_vm";
       };
     };
 }
