@@ -11,6 +11,7 @@
       wget                  # download stuff from the internet
       git                   # essential version management
       alacritty             # basic terminal emulator
+      tldr                  # Basic help
     ];
 
     fonts.packages = with pkgs; [
