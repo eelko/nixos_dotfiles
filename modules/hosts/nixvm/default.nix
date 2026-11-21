@@ -1,9 +1,8 @@
 # QEMU VM running qtile, reachable over SSH.
-# Needs --impure: imports the VM's own /etc/nixos/hardware-configuration.nix.
 { inputs, config, ... }:
 
 {
-  flake.nixosConfigurations.quemu_vm = inputs.nixpkgs.lib.nixosSystem {
+  flake.nixosConfigurations.nixvm = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = with config.flake.modules.nixos; [
       nix
@@ -12,18 +11,18 @@
       qtile
       browsers
       ssh-server
-      quemu-vm
+      nixvm
     ];
   };
 
-  flake.modules.nixos.quemu-vm = { pkgs, ... }: {
-    imports = [ /etc/nixos/hardware-configuration.nix ];
+  flake.modules.nixos.nixvm = { pkgs, ... }: {
+    imports = [ ./_hardware-configuration.nix ];
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
     services.qemuGuest.enable = true;
 
-    networking.hostName = "nixos-btw";
+    networking.hostName = "nixvm";
 
     services.xserver.displayManager.sessionCommands = ''
       ${pkgs.xrandr}/bin/xrandr --output Virtual-1 --mode 1920x1200

@@ -17,8 +17,8 @@
       shellAliases = {
         btw = "echo bash interpreter on nix";
         lg = "lazygit";
-        nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
-        update = "nix flake update nixpkgs nixpkgs-unstable nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
+        nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles";
+        update = "nix flake update nixpkgs nixpkgs-unstable nixos-hardware && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles";
         l = "eza -l --git-repos --git";
       };
     };
@@ -28,8 +28,8 @@
       shellAliases = {
         btw = "echo fish interpreter on nix";
         lg = "lazygit";
-        nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles#nixos-btw";
-        update = "nix flake update nixpkgs nixpkgs-unstable nixos-hardware && sudo nixos-rebuild switch --flake ~/nixos-dotfiles#nixos-btw";
+        nrs = "sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles";
+        update = "nix flake update nixpkgs nixpkgs-unstable nixos-hardware && sudo nixos-rebuild --impure switch --flake ~/nixos-dotfiles";
         nclean = "sudo nix-collect-garbage";
         l = "eza -l --git-repos --git";
       };

@@ -1,9 +1,8 @@
 # nixbox: MacBook Pro 16,2 (Intel, T2).
-# Flake output kept as `nixos-btw` so the nrs/update aliases keep working.
 { inputs, config, ... }:
 
 {
-  flake.nixosConfigurations.nixos-btw = inputs.nixpkgs.lib.nixosSystem {
+  flake.nixosConfigurations.nixbox = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = with config.flake.modules.nixos; [
       nix
