@@ -12,6 +12,7 @@
       gnome
       browsers
       apple-t2
+      vm-host
       nixbox
     ];
   };

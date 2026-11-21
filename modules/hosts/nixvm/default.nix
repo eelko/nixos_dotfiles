@@ -29,7 +29,7 @@
     '';
 
     users.users.eelko.openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDgi4qYwTyT96lXkgTc/KOqxWy4cxKTU6DVDUxducCTN eelko@umbp"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL+ntds+P8ZuNm6CmUHv+Ar3/kAopRA3Drwiy/FQ7fXz eelko@nixos"
     ];
 
     # The VM keeps bash as login shell (no `shell` feature), but home-manager
